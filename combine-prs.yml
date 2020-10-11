@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       branchPrefix:
-        description: 'Branch prefix to find combineable PRs based on'
+        description: 'Branch prefix to find combinable PRs based on'
         required: true
         default: 'dependabot'
       mustBeGreen:
