@@ -13,7 +13,7 @@ Then on GitHub, click the 'Actions' tab at the top of your repository, then unde
 The workflow uses only the [actions/github-script](https://github.com/actions/github-script/) and [actions/checkout](https://github.com/actions/checkout/) actions published by GitHub.
 As you can see from the image you can easily set another branch prefix for matching, and choose whether to only include branches that are green (have the 'success' status on GitHub, e.g. from successful CI) - this is the default. If you don't run checks, then set this setting to false, since a PR with no checks will have a status of 'pending' rather than 'success'.
 
-Finally, you can set a label on PRs that you want to exclude when combining PRs - by default this label is 'nocombine'. For example this can be handy if you have a single PR causing merge conflicts (see Limitations below) - in that case you can exclude that PR by adding the label, and still combine the rest of the PRs.
+Finally, you can set a label on PRs that you want to exclude when combining PRs - by default this label is 'nocombine'. For example this can be handy if you have a single PR causing merge conflicts (see Limitations below). In that case you can exclude that PR by adding the label, and still combine the rest of the PRs.
 
 You are also welcome to modify the code to your needs if you need more customization than that (for example it currently doesn't work with forks, only branches within the same repo).
 
