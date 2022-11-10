@@ -1,25 +1,25 @@
-name: 'Combine PRs'
+name: "Combine PRs"
 
 # Controls when the action will run - in this case triggered manually
 on:
   workflow_dispatch:
     inputs:
       branchPrefix:
-        description: 'Branch prefix to find combinable PRs based on'
+        description: "Branch prefix to find combinable PRs based on"
         required: true
-        default: 'dependabot'
+        default: "dependabot"
       mustBeGreen:
-        description: 'Only combine PRs that are green (status is success)'
+        description: "Only combine PRs that are green (status is success)"
         required: true
         default: true
       combineBranchName:
-        description: 'Name of the branch to combine PRs into'
+        description: "Name of the branch to combine PRs into"
         required: true
-        default: 'combine-prs-branch'
+        default: "combine-prs-branch"
       ignoreLabel:
-        description: 'Exclude PRs with this label'
+        description: "Exclude PRs with this label"
         required: true
-        default: 'nocombine'
+        default: "nocombine"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -54,6 +54,7 @@ jobs:
                   const stateQuery = `query($owner: String!, $repo: String!, $pull_number: Int!) {
                     repository(owner: $owner, name: $repo) {
                       pullRequest(number:$pull_number) {
+                        mergeable
                         commits(last: 1) {
                           nodes {
                             commit {
@@ -73,11 +74,20 @@ jobs:
                   };
                   const result = await github.graphql(stateQuery, vars);
                   const [{ commit }] = result.repository.pullRequest.commits.nodes;
-                  const state = commit.statusCheckRollup.state
-                  console.log('Validating status: ' + state);
-                  if(state != 'SUCCESS') {
-                    console.log('Discarding ' + branch + ' with status ' + state);
-                    statusOK = false;
+                  if(commit.statusCheckRollup != null){
+                    const state = commit.statusCheckRollup.state
+                    console.log('Validating status: ' + state);
+                    if(state != 'SUCCESS') {
+                      console.log('Discarding ' + branch + ' with status ' + state);
+                      statusOK = false;
+                    }
+                  } else {
+                    const mergeable = result.repository.pullRequest.mergeable
+                    console.log('PR does not have statusCheckRollup, but mergeability is: ' + mergeable);
+                    if(mergeable !== 'MERGEABLE'){
+                      console.log('Discarding ' + branch + ' with mergeability: ' + mergeable);
+                      statusOK = false;
+                    }
                   }
                 }
                 console.log('Checking labels: ' + branch);
@@ -115,7 +125,7 @@ jobs:
               core.setFailed('Failed to create combined branch - maybe a branch by that name already exists?');
               return;
             }
-            
+
             let combinedPRs = [];
             let mergeFailedPRs = [];
             for(const { branch, prString } of branchesAndPRStrings) {
@@ -133,7 +143,7 @@ jobs:
                 mergeFailedPRs.push(prString);
               }
             }
-            
+
             console.log('Creating combined PR');
             const combinedPRsString = combinedPRs.join('\n');
             let body = '✅ This PR was created by the Combine PRs action by combining the following PRs:\n' + combinedPRsString;
