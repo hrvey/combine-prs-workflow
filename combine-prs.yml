@@ -10,6 +10,7 @@ on:
         default: 'dependabot'
       mustBeGreen:
         description: 'Only combine PRs that are green (status is success)'
+        type: boolean
         required: true
         default: true
       combineBranchName:
