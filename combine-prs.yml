@@ -9,7 +9,7 @@ on:
         required: true
         default: 'dependabot'
       mustBeGreen:
-        description: 'Only combine PRs that are green (status is success)'
+        description: 'Only combine PRs that are green (status is success - set to false if repo does not run checks)'
         type: boolean
         required: true
         default: true
