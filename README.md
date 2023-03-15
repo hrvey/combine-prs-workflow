@@ -9,7 +9,7 @@ Then on GitHub, click the 'Actions' tab at the top of your repository, then unde
 
 ![Run workflow](/images/run.png?raw=true "Run workflow")
 
-⚠️ If you don't run checks on your repo, set mustBeGreen to false (consider setting it to default to false in the yml file, so you don't have to remember to change it to false on every run)
+⚠️ If you don't run checks on your repo, set mustBeGreen to false (consider setting it to default to false in the yml file, so you don't have to remember to change it to false on every run) ⚠️
 
 # Customization
 The workflow uses only the [actions/github-script](https://github.com/actions/github-script/) action published by GitHub.
