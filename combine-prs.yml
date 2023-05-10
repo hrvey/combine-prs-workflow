@@ -17,6 +17,10 @@ on:
         description: 'Name of the branch to combine PRs into'
         required: true
         default: 'combine-prs-branch'
+      pullRequestLabel:
+        description: 'Label to add to the created PR'
+        required: true
+        default: 'combine-deps'
       ignoreLabel:
         description: 'Exclude PRs with this label'
         required: true
@@ -142,7 +146,7 @@ jobs:
               const mergeFailedPRsString = mergeFailedPRs.join('\n');
               body += '\n\n⚠️ The following PRs were left out due to merge conflicts:\n' + mergeFailedPRsString
             }
-            await github.rest.pulls.create({
+            const createdPullRequest = await github.rest.pulls.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: 'Combined PR',
@@ -150,3 +154,10 @@ jobs:
               base: baseBranch,
               body: body
             });
+            console.log('Repo created, adding label to PR number: ', createdPullRequest.data.number);
+            await github.rest.issues.addLabels({
+              issue_number: createdPullRequest.data.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['${{ github.event.inputs.pullRequestLabel }}']
+            })
