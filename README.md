@@ -19,6 +19,14 @@ Finally, you can set a label on PRs that you want to exclude when combining PRs 
 
 You are also welcome to modify the code to your needs if you need more customization than that (for example it currently doesn't work with forks, only branches within the same repo).
 
+# Usage in Organisations or Enterprises
+
+If you want to use that action in an GitHub Organsiation or Enterprise you first have to allow it in the settings.
+
+For GitHub Organisations got to `https://github.com/organizations/YOUR-ORGANISATION/settings/actions`.
+For GitHub Enterprises got to `https://github.com/enterprises/YOUR-ENTERPRISE/settings/actions`.
+Scroll down to the bottom and check `Allow GitHub Actions to create and approve pull requests`.
+
 # Limitations
 This workflow merges the branches of the PRs together into a single branch using git's simple merge and automatic merge strategies. Unfortunately that means it has the same limitations as these merge strategies, so it will only work on PRs with branches that can be auto-merged without running into a merge conflict. In case any merge conflicts happen, the created combined PR will just include as many branches as could be merged without conflict, and it will list which PRs were left out due to merge conflicts.
 The way merge conflicts will typically happen when updating dependencies is that different dependency updates end up modifying the same line in the `.lock` file (the file that ensures stability in exactly which versions of depencies are currently being used, when dependencies are defined in a broad enough way that multiple different versions could satisfy the constraints).
